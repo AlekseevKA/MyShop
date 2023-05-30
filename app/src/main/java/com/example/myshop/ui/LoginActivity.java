@@ -1,5 +1,7 @@
 package com.example.myshop.ui;
 
+import static com.example.myshop.Prevalent.Prevalent.currentOnlineUser;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.CheckBox;
 
+import java.io.Serializable;
+
 import io.paperdb.Paper;
 
 public class LoginActivity extends AppCompatActivity
@@ -37,7 +41,7 @@ public class LoginActivity extends AppCompatActivity
 
     private String parentDbName ="Users";
     private CheckBox checkBoxRememberMe;
-
+    private Users currentOnlineUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,12 +111,18 @@ public class LoginActivity extends AppCompatActivity
     private void ValidateUser(final String phone, final String password) {
 
         if(checkBoxRememberMe.isChecked()){
-            Paper.book().write(Prevalent.UserPhoneKey, phone);
-            Paper.book().write(Prevalent.UserPasswordKey, password);
+           // Paper.book().write(Prevalent.UserPhoneKey, phone);
+            //Paper.book().write(Prevalent.UserPasswordKey, password);
+            Paper.book().write("rememberMe", true);
+        } else {
+            Paper.book().delete("rememberMe");
         }
 
+        boolean rememberMe = Paper.book().read("rememberMe", false);
+        checkBoxRememberMe.setChecked(rememberMe);
+
         final DatabaseReference RootRef;
-        RootRef = FirebaseDatabase.getInstance().getReference();
+        RootRef = FirebaseDatabase.getInstance("https://checkdb-7bff5-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
 
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -120,7 +130,9 @@ public class LoginActivity extends AppCompatActivity
                 if(dataSnapshot.child(parentDbName).child(phone).exists())
                 {
                     Users usersData = dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
+                    Prevalent.currentOnlineUser = usersData;
 
+                    //currentOnlineUser = usersData;
                     if(usersData.getPhone().equals(phone))
                     {
                         if(usersData.getPassword().equals(password))
@@ -128,8 +140,11 @@ public class LoginActivity extends AppCompatActivity
                             if(parentDbName.equals("Users")){
                                 loadingBar.dismiss();
                                 Toast.makeText(LoginActivity.this, "Успешный вход!", Toast.LENGTH_SHORT).show();
-
+                                //Prevalent.currentOnlineUser = new Users();
+                                Prevalent.currentOnlineUser = usersData;
+                                //Prevalent.currentOnlineUser = Paper.book().read(Prevalent.UserPhoneKey);
                                 Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                                //homeIntent.putExtra("currentOnlineUser", Prevalent.currentOnlineUser);
                                 startActivity(homeIntent);
                             }
                             else if(parentDbName.equals("Admins")){

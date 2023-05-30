@@ -55,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         addressEditText = (EditText) findViewById(R.id.settings_address);
         saveTextButton = (TextView) findViewById(R.id.save_settings_tv);
         closeTextBtn = (TextView) findViewById(R.id.close_settings_tv);
-        storageProfilePictureRef = FirebaseStorage.getInstance().getReference().child("Profile pictures");
+        storageProfilePictureRef = FirebaseStorage.getInstance("gs://checkdb-7bff5.appspot.com").getReference().child("Profile pictures");
 
         userInfoDisplay(profileImageView, fullNameEditText, userPhoneEditText,addressEditText);
 
@@ -96,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void userInfoDisplay(final CircleImageView profileImageView,final EditText fullNameEditText,final EditText userPhoneEditText,final EditText addressEditText) {
         String phone = Prevalent.currentOnlineUser.getPhone();
-        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(phone);
+        DatabaseReference UsersRef = FirebaseDatabase.getInstance("https://checkdb-7bff5-default-rtdb.europe-west1.firebasedatabase.app/").getReference().child("Users").child(phone);
 
         UsersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -187,8 +187,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         if (imageUri != null)
         {
-            final StorageReference fileRef = storageProfilePictureRef
-                    .child(Prevalent.currentOnlineUser.getPhone() + ".WebP");
+            final StorageReference fileRef = storageProfilePictureRef.child(Prevalent.currentOnlineUser.getPhone() + ".WebP");
 
             uploadTask = fileRef.putFile(imageUri);
 
@@ -213,7 +212,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 Uri downloadUrl = task.getResult();
                                 String myUrl = downloadUrl.toString();
 
-                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+                                DatabaseReference ref = FirebaseDatabase.getInstance("https://checkdb-7bff5-default-rtdb.europe-west1.firebasedatabase.app/").getReference().child("Users");
 
                                 HashMap<String, Object> userMap = new HashMap<>();
                                 userMap. put("name", fullNameEditText.getText().toString());
@@ -243,7 +242,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void updateOnlyUserInfo() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+        DatabaseReference ref = FirebaseDatabase.getInstance("https://checkdb-7bff5-default-rtdb.europe-west1.firebasedatabase.app/").getReference().child("Users");
 
         HashMap<String, Object> userMap = new HashMap<>();
         userMap. put("name", fullNameEditText.getText().toString());

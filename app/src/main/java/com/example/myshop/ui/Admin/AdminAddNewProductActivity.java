@@ -66,6 +66,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                 ValidateProductData();
             }
         });
+
     }
 
     private void ValidateProductData() {
@@ -96,6 +97,8 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         loadingBar.setMessage("Пожалуйста, подождите...");
         loadingBar.setCanceledOnTouchOutside(false);
         loadingBar.show();
+       // loadingBar.dismiss();
+
 
         Calendar calendar = Calendar.getInstance();
 
@@ -160,6 +163,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         productMap.put("price", Price);
         productMap.put("pname", Pname);
 
+
         ProductsRef.child(productRandomKey).updateChildren(productMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -207,7 +211,12 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         productPrice = findViewById(R.id.product_price);
         addNewProductButton = findViewById(R.id.btn_add_new_product);
         ProductImageRef = FirebaseStorage.getInstance().getReference().child("Product Images");
-        ProductsRef = FirebaseDatabase.getInstance().getReference().child("Products");
+        ProductsRef = FirebaseDatabase.getInstance("https://checkdb-7bff5-default-rtdb.europe-west1.firebasedatabase.app/").getReference().child("Products");
+        loadingBar = new ProgressDialog(this);
+        ProductImageRef = FirebaseStorage.getInstance("gs://checkdb-7bff5.appspot.com").getReference();
+
+
+
         loadingBar = new ProgressDialog(this);
 
     }

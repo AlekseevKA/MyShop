@@ -78,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity
 
     private void ValidatePhone(final String username, final String phone, final String password) {
         final DatabaseReference RootRef;
-        RootRef = FirebaseDatabase.getInstance().getReference();
+        RootRef = FirebaseDatabase.getInstance("https://checkdb-7bff5-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
 
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void ValidateUser(final String phone, final String password) {
         final DatabaseReference RootRef;
-        RootRef = FirebaseDatabase.getInstance().getReference();
+        RootRef = FirebaseDatabase.getInstance("https://checkdb-7bff5-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
 
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Успешный вход!", Toast.LENGTH_SHORT).show();
 
                             Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class);
-                            Prevalent.currentOnlineUser = usersData;
+                          //  Prevalent.currentOnlineUser = usersData;
                             startActivity(homeIntent);
                         }
                         else {

@@ -1,5 +1,7 @@
 package com.example.myshop.ui.Users;
 
+import static com.example.myshop.Prevalent.Prevalent.currentOnlineUser;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -9,8 +11,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myshop.Model.Products;
+import com.example.myshop.Model.Users;
 import com.example.myshop.Prevalent.Prevalent;
 import com.example.myshop.R;
 import com.example.myshop.ViewHolder.ProductViewHolder;
@@ -55,8 +59,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        ProductsRef = FirebaseDatabase.getInstance().getReference().child("Products");
-
+        ProductsRef = FirebaseDatabase.getInstance("https://checkdb-7bff5-default-rtdb.europe-west1.firebasedatabase.app/").getReference().child("Products");
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("currentOnlineUser")) {
+            Prevalent.currentOnlineUser = (Users) intent.getSerializableExtra("currentOnlineUser");
+        }
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Меню");
         setSupportActionBar(toolbar);
@@ -89,8 +96,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
         CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-        userNameTextView.setText(Prevalent.currentOnlineUser.getName());
-        Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+
+
+        //userNameTextView.setText(Prevalent.currentOnlineUser.getName());
+        //Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+        if (currentOnlineUser != null) {
+            // Используйте currentOnlineUser.getName() и другие свойства объекта
+            userNameTextView.setText(currentOnlineUser.getName());
+            Picasso.get().load(currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+        } else {
+            Toast.makeText(HomeActivity.this, "Null", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
 
         recyclerView = findViewById(R.id.recycler_menu);
         recyclerView.setHasFixedSize(true);
@@ -162,6 +182,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if(id == R.id.nav_logout){
             Paper.book().destroy();
             Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
+
             startActivity(loginIntent);
         }
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);

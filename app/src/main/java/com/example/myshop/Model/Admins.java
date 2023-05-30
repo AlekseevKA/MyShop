@@ -1,16 +1,14 @@
 package com.example.myshop.Model;
 
-import java.io.Serializable;
-
-public class Users implements Serializable {
+public class Admins {
     private String name, phone, password, image;
 
-    public Users()
+    public Admins()
     {
 
     }
 
-    public Users(String name, String phone, String password, String image) {
+    public Admins(String name, String phone, String password, String image) {
         this.name = name;
         this.phone = phone;
         this.password = password;
