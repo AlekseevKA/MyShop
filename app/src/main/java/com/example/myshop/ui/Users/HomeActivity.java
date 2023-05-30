@@ -101,7 +101,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //userNameTextView.setText(Prevalent.currentOnlineUser.getName());
         //Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
         if (currentOnlineUser != null) {
-            // Используйте currentOnlineUser.getName() и другие свойства объекта
             userNameTextView.setText(currentOnlineUser.getName());
             Picasso.get().load(currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
         } else {
@@ -161,7 +160,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
